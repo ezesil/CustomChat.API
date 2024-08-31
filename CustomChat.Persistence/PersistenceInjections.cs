@@ -53,7 +53,7 @@ namespace CustomChat.Persistence
             e.Services.AddSingleton<IEmailSender<IdentityUser>, EmailSender>();
 
             e.Services.AddDbContext<IdentityContext>(options =>
-                options.UseNpgsql(e.Configuration.GetConnectionString("DefaultConnection"),
+                options.UseNpgsql(Environment.GetEnvironmentVariable("CRDB_CONN_STRING"),
                 b => b.MigrationsAssembly(Assembly.GetCallingAssembly().GetName().Name)
             ));
 
