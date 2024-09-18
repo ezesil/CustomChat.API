@@ -1,9 +1,9 @@
 using Azure.AI.OpenAI;
 using CustomChat.API.Extensions;
 using CustomChat.Persistence;
+using CustomChat.Application;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 namespace CustomChat.API
 {
@@ -15,12 +15,13 @@ namespace CustomChat.API
 
             builder.AddSwaggerAuthorize();
 
-            builder.AddRepositories().AddDbContext().AddIdentity();
+            builder
+                .AddRepositories()
+                .AddDbContext()
+                .AddIdentity();
 
-            builder.Services.AddMediatR(cfg => 
-            cfg.RegisterServicesFromAssembly(Assembly.Load(
-                AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(x => x.FullName!.Contains(nameof(Application)))!.GetName()               
-            )));
+            builder.AddApplication();
+            
             builder.Services.AddScoped(x => new OpenAIClient(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
 
             builder.Services.AddControllers();
